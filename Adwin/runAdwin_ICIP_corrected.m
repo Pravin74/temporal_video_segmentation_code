@@ -1,5 +1,7 @@
-function [w3, indexes]=k_dim_segmentation(data,fi, p, flag)
-%
+function [indexes, win_start, win_end, max_mean] = runAdwin_ICIP_corrected(data, fi, p)
+%set parameters
+epsilon= 1; % epsilon, 1 - sensitive segmentation; 0 - robust segmentation;
+% epsilon = 0;
 % INPUT:
 %   data   -> n x k data stream (each data in [0, 1]).
 %   fi -> segmentation parameter
@@ -9,10 +11,19 @@ function [w3, indexes]=k_dim_segmentation(data,fi, p, flag)
 % OUTPUT:
 %   w3    -> n x k data streams with means. 
 %   idx   -> idx inside a stream with detected change.
-
-
+% data = data(:,1);
+% data = repmat(data, [1,84]) ;
+flag = 1;
 [n_tot,k]=size(data);
-w3=zeros(n_tot, k);
+% Normalizing dataset
+data = (data - min(data(:))) / ( max(data(:)) - min(data(:)));
+% calulating norm to convert form x_t to L_t
+data = vecnorm(data,p,2);
+
+% k =1 for original ADWIN
+% k = 1;
+%w3=zeros(n_tot, k);
+
 w=zeros(1, n_tot);
 
 len = min(5,n_tot);
@@ -20,12 +31,15 @@ len = min(5,n_tot);
 if len == 1
     indexes = [1];
 else
-
-W=data(1:len,1:k);
-
+W=data(1:len,:);
+win_start = [];
+win_end = [];
+max_mean = [];
+temp_start = [1];
+cut_threshold = [];
+mean_diff = [];
 for t=len+1:n_tot
-
-    W=[W; data(t,1:k)] ;
+    W=[W; data(t,:)] ;
     pNorm = sum(abs(W).^p,2).^(1/p);
     pNorm=pNorm./((k)^(1/p));
     variance=var(pNorm);
@@ -41,18 +55,26 @@ for t=len+1:n_tot
         
         z=cumsum(W);
         n_frames=size(W,1)-1;
+        
         for i=1:n_frames
             n0=i;
             n1=size(W,1)-i;
       
             m=(n0*n1)/((sqrt(n0)+sqrt(n1))^2);
-            fi_prime=fi/(k*(n0+n1));
-            
-            
+            m=(n0*n1)/ (n0+n1);
+            %fi_prime=fi/(k*(n0+n1));
+            fi_prime=fi/((n0+n1));
+                                             
             if flag ==1
                 ecut2=(k)^(1/p)*sqrt( (2/m) * variance * log(2/fi_prime) ) + (2/(3*m))*log(2/fi_prime);
             elseif flag==0             
                 ecut2=(k)^(1/p)*((1/(2*m)) * log((4)/fi_prime) )^(1/2);
+            elseif flag==2
+                V0 = norm(W(:,1:n0),p);
+                V1 = norm(W(:,n0+1:n_frames),p);
+                ecut2 = ((n0^(k/2))*V1 + (n1^(k/2))* V0) * ( (1/(2*n0*n1))*log(fi/(4*n_frames)))^(k/2);
+            elseif flag==3
+                ecut2=((1/(2*m)) *log(fi/(4*n_frames)))^(k/2);
             end
 %             ecut2
             mu_w0=(z(i,:))/i;
@@ -60,6 +82,9 @@ for t=len+1:n_tot
             r1(i)=norm(mu_w0 - mu_w1, p);
             r2(i)=ecut2;
         end
+        [aa bb]=max(r1-r2);
+         cut_threshold = [cut_threshold, r2(bb)];
+         mean_diff = [mean_diff, r1(bb)];
         if(max(r1-r2)<0)
             cut=true;
         end
@@ -67,26 +92,30 @@ for t=len+1:n_tot
             %disp(ecut2)
             %disp(max(r1))
                         %disp(max(r1-r2))
+            win_start = [win_start, sum(temp_start)];
             [aa bb]=max(r1-r2);
-%                 aa
-%                 bb
-            W_tmp=W(bb+1:end,1:k);
+            win_end = [win_end, t];
+            temp_start = [temp_start, bb];
+            max_mean = [max_mean, max(r1)];
+            W_tmp=W(bb+1:end,:);
             clear W;
             W=W_tmp;
             clear W_tmp;
         end
     end
     w(t)=size(W,1);
+    
+   
 end
 
+figure;
+plot([cut_threshold;mean_diff; mean_diff-cut_threshold]');
+legend({'\epsilon_{cut}','|W_0 - W_1|', '|W_0 - W_1|-\epsilon_{cut}'},'Location','southeast')
 
 x=w(2:end)-w(1:end-1);
 indexes=abs(x(find(x<0)))+1;
 indexes=cumsum(indexes);
-indexes=[1 indexes length(w)];
-
-for i=1:length(indexes)-1
-    w3(indexes(i):indexes(i+1), 1:k)=(repmat(mean(data(indexes(i):indexes(i+1), 1:k)), [length([indexes(i):indexes(i+1)]) 1]));
+%indexes=[1 indexes length(w)];
 end
 
-end
+
