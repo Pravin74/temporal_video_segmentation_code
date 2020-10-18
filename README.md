@@ -6,13 +6,13 @@ This is the implementation of our paper titled "Concept Drift Detection for Mult
 
 ## Requirements
 The code has been tested on:
- - Caffe Deep Learning Framework and matcaffe wrapper (for global features calculation)
-	       Caffe main page: http://caffe.berkeleyvision.org/
-		     Good Linux installation tutorial: https://github.com/tiangolo/caffe/blob/ubuntu-tutorial-b/docs/install_apt2.md
-		     CaffeNet model: http://dl.caffe.berkeleyvision.org/bvlc_googlenet.caffemodel
-- Compile files in GCMex for your system.
-- MATLAB 2016 (higher version also works)
-- Python 2.7
+ - Caffe Deep Learning Framework and matcaffe wrapper (for global features calculation)  
+	       Caffe main page: http://caffe.berkeleyvision.org/  
+		     Good Linux installation tutorial: https://github.com/tiangolo/caffe/blob/ubuntu-tutorial-b/docs/install_apt2.md  
+		     CaffeNet model: http://dl.caffe.berkeleyvision.org/bvlc_googlenet.caffemodel  
+- Compile files in GCMex for your system.  
+- MATLAB 2016 (higher version also works)  
+- Python 2.7  
 
 
 ## Get started
