@@ -16,8 +16,15 @@ The code has been tested on:
 
 
 ## Get started
+To reproduce the results:
+- Download the features from project page in './Demo/Features/CNNfeatures' folder.
+- Change the parameters \delta ('confidence' variable in 'process_single_sequence_v2.m' file) and \rho_c ('corr_coef_th' in 'runAdwin_p_norm_normalized_adapt_jump.m' file) as mentioned in supplementary material.
+- Now run 'Demo/demo.m'
+- Find the output file in the 'Demo/Results' folder.
 
-## How to generate summaries
+To run on a new video sequence:
+- Extract the images and give the folder path in 'demo.m'.
+- Adjust \delta and \rho_c and execute the demo.m.
 
 
 ## Citation
