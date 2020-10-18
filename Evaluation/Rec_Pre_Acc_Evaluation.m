@@ -1,8 +1,8 @@
-function [rec,prec,acc,fMeasure]=Rec_Pre_Acc_Evaluation(GT,automatic,Nframes,tol)
+function [rec,prec,acc,fMeasure,TP,TN,FP,FN]=Rec_Pre_Acc_Evaluation(GT,automatic,Nframes,tol)
 
 %TP,TN,FP,FN
 
-[TP,TN,FP,FN] = TP_TN_FP_FN(GT,automatic,Nframes,tol); 
+[TP,TN,FP,FN] = TP_TN_FP_FN_modified(GT,automatic,Nframes,tol); 
 
 %Precision
 if TP+FP == 0

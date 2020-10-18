@@ -111,7 +111,7 @@ pnorm = 2;
 confidence = 0.1;
 paramsPCA.usePCA_Adwin = true;
 
-%% GraphCuts parameters
+%% GraphCuts parametersData_Loading
 paramsPCA.usePCA_GC = false;
 window_len = 11;
 % window_len = 50;

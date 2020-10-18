@@ -59,7 +59,10 @@ function [events,clustersId,cl_limGT,sum]=analizarExcel_Narrative(excelfile, fil
             else
                 error(['Incorrect init-final images separator used in line ' eString])
             end
-            a = str2num(a);
+            %a = str2num(a);
+            %% edite by pravin
+            a{1} = str2num(a{1});
+            a{2} = str2num(a{2});
         elseif v == 2
             if(~isempty(findstr(eString, '-')))
                 a = regexp(eString, '-', 'split');
@@ -78,7 +81,8 @@ function [events,clustersId,cl_limGT,sum]=analizarExcel_Narrative(excelfile, fil
 
         % Buscamos si hay coincidencia en la carpeta de imagenes
         try
-            for j=a(1):1:a(2)
+            % edited by pravin
+            for j=a{1}:1:a{2}
                 if(find(array==j)>0)
                     aux_Eve2(1,p)=j;
                     p=p+1;
@@ -88,7 +92,7 @@ function [events,clustersId,cl_limGT,sum]=analizarExcel_Narrative(excelfile, fil
             clearvars aux_Eve2 a
         catch
             disp(a);
-            error(['Error found on the shown line.']);
+            error(['Erro.r found on the shown line.']);
         end
     end
     
@@ -108,7 +112,7 @@ function [events,clustersId,cl_limGT,sum]=analizarExcel_Narrative(excelfile, fil
         cl_limGT(i+1) = cl_limGT(i) + size(events{i},2);
     end
     
-    %Comprobar que lee todas las imágenes
+    %Check that you read all the images
     sum=0;
     for i=1:length(events)
         sum=sum+ size(events{i},2);

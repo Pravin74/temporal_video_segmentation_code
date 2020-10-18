@@ -15,7 +15,7 @@ function [ new_features, mean, stdDev ] = applyPCA( features, params )
         if(params.standarizePCA)
             [features mean stdDev] = standarize(features);
         end
-        [COEFF, ~, latent] = princomp(features);
+        [COEFF, ~, latent] = pca(features);
 
         %% Get variables with a minimum of minVar of the variance
         dim = 0; var = 0;
