@@ -25,6 +25,7 @@ To reproduce the results:
 To run on a new video sequence:
 - Extract the images and give the folder path in 'demo.m'.
 - Adjust '\delta' and '\rho_c' and execute the 'demo.m'.
+- Find the output file in the './Demo/Results' folder.
 
 
 ## Citation
