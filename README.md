@@ -1,4 +1,4 @@
-# Concept Drift Detection forMultivariate Data Streams and Temporal Segmentation of Daylong Egocentric Videos
+# Concept Drift Detection for Multivariate Data Streams and Temporal Segmentation of Daylong Egocentric Videos
 
 This is the implementation of our paper titled "Concept Drift Detection for Multivariate Data Streams and Temporal Segmentation of Daylong Egocentric Videos"  in ACMMM2020. We present a novel unsupervised temporal segmentation technique especially suited for day-long egocentric videos.
 
